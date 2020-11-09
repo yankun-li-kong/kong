@@ -465,10 +465,7 @@ function balancer_mt:setCallback(callback)
   assert(type(callback) == "function", "expected a callback function")
 
   self.callback = function(balancer, action, address, ip, port, hostname, hostheader)
-    local ok, err = ngx.timer.at(0, function()
-      callback(balancer, action, address, ip, port, hostname, hostheader)
-    end)
-
+    local ok, err = kong.async:run(callback, balancer, action, address, ip, port, hostname, hostheader)
     if not ok then
       ngx.log(ngx.ERR, self.log_prefix, "failed to create the timer: ", err)
     end

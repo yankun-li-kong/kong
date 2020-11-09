@@ -42,7 +42,7 @@ local queryDns
 
 function targets_M.init()
   dns_client = require("kong.tools.dns")(kong.configuration)    -- configure DNS client
-  ngx.timer.every(1, resolve_timer_callback)
+  kong.async:every(1, resolve_timer_callback)
 end
 
 

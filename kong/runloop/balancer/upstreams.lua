@@ -15,7 +15,6 @@ local ngx = ngx
 local log = ngx.log
 local null = ngx.null
 local table_remove = table.remove
-local timer_at = ngx.timer.at
 
 
 local CRIT = ngx.CRIT
@@ -242,7 +241,7 @@ function upstreams_M.update_balancer_state(premature)
   end
 
   local frequency = kong.configuration.worker_state_update_frequency or 1
-  local _, err = timer_at(frequency, upstreams_M.update_balancer_state)
+  local _, err = kong.async:at(frequency, upstreams_M.update_balancer_state)
   if err then
     log(CRIT, "unable to reschedule update proxy state timer: ", err)
   end
